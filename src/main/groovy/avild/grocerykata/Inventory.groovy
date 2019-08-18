@@ -17,4 +17,17 @@ class Inventory {
     void removeItem(String query) {
         inventory.removeAll { it.name.equalsIgnoreCase(query) }
     }
+
+    void updateItemPrice(String query, int updatedPrice) {
+        inventory.collect { items ->
+            if(items.name.equalsIgnoreCase(query)) {
+                items.price = updatedPrice
+            }
+            return items
+        }
+    }
+
+    void clearInventory() {
+        this.inventory.clear()
+    }
 }
