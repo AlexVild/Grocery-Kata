@@ -52,12 +52,34 @@ class InventorySpec extends Specification {
 
     def "clearInventory removes all items from the inventory"() {
         given:
-        mockInventory.itemsInInventory = [apple, apple, apple]
+        GroceryItem banana = new GroceryItem("banana", 299, 0, 5)
+        GroceryItem pear = new GroceryItem("pear", 299, 0, 5)
+        mockInventory.itemsInInventory = [apple, pear, banana]
 
         when:
         mockInventory.clearInventory()
 
         then:
         mockInventory.itemsInInventory.size() == 0
+    }
+
+    def "queryForItem returns a groceryItem in the inventory from a given string"() {
+        given:
+        mockInventory.itemsInInventory = [apple]
+
+        when:
+        final GroceryItem expected = mockInventory.queryForItem("apple")
+
+        then:
+        expected == apple
+    }
+
+    def "queryForItem returns a NoSuchField exception when it can't find the item specified"() {
+        when:
+        mockInventory.queryForItem("apple")
+
+        then:
+        def ex = thrown(NoSuchFieldException)
+        ex.message == "apple does not exist in the inventory"
     }
 }
