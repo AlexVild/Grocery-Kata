@@ -22,4 +22,12 @@ class GroceryScannerSpec extends Specification{
         then:
         groceryScanner.sum == 598
     }
+
+    def "ringItem correctly trims and ignores case of a query string"() {
+        when:
+        groceryScanner.ringItem("   APPLE   ")
+
+        then:
+        groceryScanner.sum == 299
+    }
 }
