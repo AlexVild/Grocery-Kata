@@ -30,11 +30,14 @@ class Inventory {
     }
 
     void updateItemPrice(String query, int updatedPrice) {
-        itemsInInventory.collect { items ->
-            if(items.name.equalsIgnoreCase(query)) {
-                items.price = updatedPrice
+        // only update an item if it exists in the first place; else: will throw queryForItem's RuntimeException
+        if (queryForItem(query)) {
+            itemsInInventory.collect { items ->
+                if(items.name.equalsIgnoreCase(query)) {
+                    items.price = updatedPrice
+                }
+                return items
             }
-            return items
         }
     }
 

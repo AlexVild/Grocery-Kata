@@ -60,6 +60,18 @@ class InventorySpec extends Specification {
         mockInventory.itemsInInventory[0].price == 99
     }
 
+    def "updatePrice throws an exception if it can't find the item in the inventory"() {
+        given:
+        mockInventory.itemsInInventory = [apple]
+
+        when:
+        mockInventory.updateItemPrice("pear", 100)
+
+        then:
+        def ex = thrown(RuntimeException)
+        ex.message == "pear does not exist in the inventory"
+    }
+
     def "clearInventory removes all items from the inventory"() {
         given:
         GroceryItem banana = new GroceryItem("banana", 299, 0, 5)
