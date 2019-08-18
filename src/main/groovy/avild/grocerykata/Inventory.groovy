@@ -7,20 +7,25 @@ class Inventory {
         itemsInInventory = new ArrayList<GroceryItem>()
     }
 
-    void addItem(GroceryItem item) {
-        itemsInInventory.push(item)
+    void addItem(GroceryItem item) throws RuntimeException {
+        // ensure the item is not already in the inventory
+        if (itemsInInventory.find { it.name.equalsIgnoreCase(item.name.trim()) }) {
+            throw new RuntimeException("${item.name} already exists in the inventory")
+        } else {
+            itemsInInventory.push(item)
+        }
     }
 
     void removeItem(String query) {
         itemsInInventory.removeAll { it.name.equalsIgnoreCase(query) }
     }
 
-    GroceryItem queryForItem(String query) {
+    GroceryItem queryForItem(String query) throws RuntimeException {
         GroceryItem item = itemsInInventory.find { it.name.equalsIgnoreCase(query.trim()) }
         if(item) {
             return item
         } else {
-            throw new NoSuchFieldException("${query} does not exist in the inventory")
+            throw new RuntimeException("${query} does not exist in the inventory")
         }
     }
 
