@@ -14,6 +14,11 @@ class GroceryScannerSpec extends Specification{
         groceryScanner.inventory = mockInventory
     }
 
+    def "GroceryScanner initializes an empty list of things rang up"() {
+        expect:
+        groceryScanner.itemsRangUp == []
+    }
+
     def "ringItem successfully queries from the Grocery's Inventory and adds the price to the running total"() {
         when:
         groceryScanner.ringItem("apple")
@@ -29,5 +34,20 @@ class GroceryScannerSpec extends Specification{
 
         then:
         groceryScanner.sum == 299
+    }
+
+    def "removeLastScannedItem removes the last item the user rang up and subtracts the total from the sum"() {
+        given:
+        GroceryItem pear = new GroceryItem("pear", 299, 0, 5)
+        groceryScanner.inventory.itemsInInventory = [apple, pear]
+        groceryScanner.itemsRangUp = [apple.name, pear.name]
+        groceryScanner.sum = apple.price + pear.price
+
+        when:
+        groceryScanner.removeLastScannedItem()
+
+        then:
+        groceryScanner.itemsRangUp.size() == 1
+        groceryScanner.sum == pear.price
     }
 }
