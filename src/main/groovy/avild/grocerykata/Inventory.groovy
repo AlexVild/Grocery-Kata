@@ -1,25 +1,22 @@
 package avild.grocerykata
-
-import avild.grocerykata.GroceryItem
-
 // Class performs CRUD operations on our grocery Inventory
 class Inventory {
-    public ArrayList<GroceryItem> inventory
+    public ArrayList<GroceryItem> itemsInInventory
 
     Inventory() {
-        inventory = new ArrayList<GroceryItem>()
+        itemsInInventory = new ArrayList<GroceryItem>()
     }
 
     void addItem(GroceryItem item) {
-        this.inventory.push(item)
+        this.itemsInInventory.push(item)
     }
 
     void removeItem(String query) {
-        inventory.removeAll { it.name.equalsIgnoreCase(query) }
+        itemsInInventory.removeAll { it.name.equalsIgnoreCase(query) }
     }
 
     void updateItemPrice(String query, int updatedPrice) {
-        inventory.collect { items ->
+        itemsInInventory.collect { items ->
             if(items.name.equalsIgnoreCase(query)) {
                 items.price = updatedPrice
             }
@@ -28,6 +25,6 @@ class Inventory {
     }
 
     void clearInventory() {
-        this.inventory.clear()
+        this.itemsInInventory.clear()
     }
 }
