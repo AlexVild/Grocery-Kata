@@ -11,11 +11,7 @@ class GroceryScanner {
     }
 
     void ringItem(String itemName) {
-        String trimmedQueryTerm = itemName.trim()
-
-        GroceryItem queriedItem = this.inventory.itemsInInventory.find {
-            it.name.equalsIgnoreCase(trimmedQueryTerm)
-        }
+        GroceryItem queriedItem = this.inventory.queryForItem(itemName)
 
         float priceOfItem = queriedItem.price
         this.sum += priceOfItem
@@ -23,9 +19,7 @@ class GroceryScanner {
 
     void removeLastScannedItem() {
         String itemToRemove = this.itemsRangUp.head()
-        int priceOfItem = this.inventory.itemsInInventory.find {
-            it.name.equalsIgnoreCase(itemToRemove)
-        }.price // todo make function to query price of item in inventory
+        int priceOfItem = this.inventory.queryForItem(itemToRemove).price
 
         this.itemsRangUp.pop() // remove the item from our rang up list
         this.sum -= priceOfItem
