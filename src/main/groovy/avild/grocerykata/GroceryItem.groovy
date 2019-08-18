@@ -4,9 +4,9 @@ class GroceryItem {
     String name
     int price
     int markdownPrice
-    long weight
+    float weight
 
-    GroceryItem(String name, int price, int markdownPrice, long weight) {
+    GroceryItem(String name, int price, int markdownPrice, float weight) {
         this.name = name
         this.price = price
         this.markdownPrice = markdownPrice
