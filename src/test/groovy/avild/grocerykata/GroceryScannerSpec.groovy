@@ -28,6 +28,16 @@ class GroceryScannerSpec extends Specification{
         groceryScanner.sum == 598
     }
 
+    def "ringItem adds the newly rang item to the amount of items rang up (pushing to the front of the stack)"() {
+        when:
+        groceryScanner.itemsRangUp = ["pear"]
+        groceryScanner.ringItem("apple")
+
+        then:
+        groceryScanner.itemsRangUp.size() == 2
+        groceryScanner.itemsRangUp[0] == "apple"
+    }
+
     def "ringItem correctly trims and ignores case of a query string"() {
         when:
         groceryScanner.ringItem("   APPLE   ")

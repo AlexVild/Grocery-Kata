@@ -14,6 +14,8 @@ class GroceryScanner {
         GroceryItem queriedItem = this.inventory.queryForItem(itemName)
 
         float priceOfItem = queriedItem.price
+
+        this.itemsRangUp.push(itemName)
         this.sum += priceOfItem
     }
 
