@@ -3,7 +3,7 @@ package avild.grocerykata
 // This class allows a clerk to ring up items for a customer who's checking out
 class GroceryScanner {
     public Inventory inventory
-    public float sum = 0.0
+    public int sum = 0
     public ArrayList<String> itemsRangUp // stack - head of list should be last item rang up
 
     GroceryScanner() {
@@ -22,6 +22,12 @@ class GroceryScanner {
         int priceOfItem = this.inventory.queryForItem(itemToRemove).price
 
         this.itemsRangUp.pop() // remove the item from our rang up list
+        this.sum -= priceOfItem
+    }
+
+    void removeItem(String item) {
+        int priceOfItem = this.inventory.queryForItem(item).price
+        this.itemsRangUp.remove(this.itemsRangUp.indexOf(item))
         this.sum -= priceOfItem
     }
 }

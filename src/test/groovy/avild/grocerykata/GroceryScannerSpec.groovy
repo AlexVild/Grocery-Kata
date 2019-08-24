@@ -50,4 +50,19 @@ class GroceryScannerSpec extends Specification{
         groceryScanner.itemsRangUp.size() == 1
         groceryScanner.sum == pear.price
     }
+
+    def "removeItem removes a specific item the user rang up based on its string ID" () {
+        given:
+        GroceryItem pear = new GroceryItem("pear", 299, 0, 5)
+        groceryScanner.inventory.itemsInInventory = [apple, pear]
+        groceryScanner.itemsRangUp = [apple.name, pear.name, pear.name]
+        groceryScanner.sum = apple.price + pear.price + pear.price
+
+        when:
+        groceryScanner.removeItem("pear")
+
+        then:
+        groceryScanner.itemsRangUp.size() == 2
+        groceryScanner.sum == apple.price + pear.price
+    }
 }

@@ -96,7 +96,7 @@ class InventorySpec extends Specification {
         expected == apple
     }
 
-    def "queryForItem returns a NoSuchField exception when it can't find the item specified"() {
+    def "queryForItem returns a Runtime exception when it can't find the item specified"() {
         when:
         String query = "apple"
         mockInventory.queryForItem(query)
