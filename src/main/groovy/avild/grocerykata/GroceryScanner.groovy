@@ -12,11 +12,18 @@ class GroceryScanner {
 
     void ringItem(String itemName) {
         GroceryItem queriedItem = this.inventory.queryForItem(itemName)
-
-        float priceOfItem = queriedItem.price
+        int priceOfItem = queriedItem.price
 
         this.itemsRangUp.push(itemName)
         this.sum += priceOfItem
+    }
+
+    void ringItemByWeight(String itemName, float weight) {
+        GroceryItem queriedItem = this.inventory.queryForItem(itemName)
+        int priceOfItem = queriedItem.price
+
+        this.itemsRangUp.push(itemName)
+        this.sum += priceOfItem * weight
     }
 
     void removeLastScannedItem() {

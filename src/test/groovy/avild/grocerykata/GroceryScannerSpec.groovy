@@ -29,8 +29,10 @@ class GroceryScannerSpec extends Specification{
     }
 
     def "ringItem adds the newly rang item to the amount of items rang up (pushing to the front of the stack)"() {
-        when:
+        given:
         groceryScanner.itemsRangUp = ["pear"]
+
+        when:
         groceryScanner.ringItem("apple")
 
         then:
@@ -44,6 +46,26 @@ class GroceryScannerSpec extends Specification{
 
         then:
         groceryScanner.sum == 299
+    }
+
+    def "ringItemByWeight correctly calculates the value of an item by its weight and adds it to the sum" () {
+        when:
+        groceryScanner.ringItemByWeight("apple", 0.5)
+
+        then:
+        groceryScanner.sum == 149
+    }
+
+    def "ringItemByWeight adds the item to the list of items rang up (front of stack)" () {
+        given:
+        groceryScanner.itemsRangUp = ["pear"]
+
+        when:
+        groceryScanner.ringItemByWeight("apple", 0.5)
+
+        then:
+        groceryScanner.itemsRangUp.size() == 2
+        groceryScanner.itemsRangUp[0] == "apple"
     }
 
     def "removeLastScannedItem removes the last item the user rang up and subtracts the total from the sum"() {
