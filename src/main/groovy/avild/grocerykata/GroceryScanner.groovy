@@ -15,7 +15,7 @@ class GroceryScanner {
         int priceOfItem = queriedItem.price
 
         this.itemsRangUp.push(itemName)
-        this.sum += priceOfItem * weight
+        this.sum += (priceOfItem.toFloat() * weight).toInteger()
     }
 
     void removeLastScannedItem() {
@@ -30,5 +30,9 @@ class GroceryScanner {
         int priceOfItem = this.inventory.queryForItem(item).price
         this.itemsRangUp.remove(this.itemsRangUp.indexOf(item))
         this.sum -= priceOfItem
+    }
+
+    String getFormattedSum() {
+        return "\$${this.sum.toFloat() / 100}"
     }
 }

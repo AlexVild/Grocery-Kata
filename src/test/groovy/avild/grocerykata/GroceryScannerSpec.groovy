@@ -97,4 +97,15 @@ class GroceryScannerSpec extends Specification{
         groceryScanner.itemsRangUp.size() == 2
         groceryScanner.sum == apple.price + pear.price
     }
+
+    def "getFormattedSum displays the running sum in dollar format" () {
+        given:
+        groceryScanner.sum = 398
+
+        when:
+        String actualSumString = groceryScanner.getFormattedSum()
+
+        then:
+        actualSumString == "\$3.98"
+    }
 }

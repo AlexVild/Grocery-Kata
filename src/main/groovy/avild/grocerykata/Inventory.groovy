@@ -1,4 +1,5 @@
 package avild.grocerykata
+
 // Class performs CRUD operations on our grocery Inventory
 class Inventory {
     public ArrayList<GroceryItem> itemsInInventory
