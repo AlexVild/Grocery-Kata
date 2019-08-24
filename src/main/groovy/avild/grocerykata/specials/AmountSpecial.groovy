@@ -1,7 +1,6 @@
 package avild.grocerykata.specials
 
-class AmountSpecial {
-    public String itemName
+class AmountSpecial extends Special {
     public int triggerAmount
     public int newPrice
     public int limit

@@ -1,7 +1,6 @@
 package avild.grocerykata.specials
 
-class PercentageSpecial {
-    public String itemName
+class PercentageSpecial extends Special {
     public int specialAmount
     public float percentOff
     public int limit
