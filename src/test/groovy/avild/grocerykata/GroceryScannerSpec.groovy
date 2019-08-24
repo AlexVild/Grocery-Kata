@@ -3,7 +3,7 @@ package avild.grocerykata
 import spock.lang.Specification
 
 class GroceryScannerSpec extends Specification{
-    GroceryItem apple = new GroceryItem("apple", 299, 0, 5)
+    GroceryItem apple = new GroceryItem("apple", 299, 0, true)
     Inventory mockInventory
     GroceryScanner groceryScanner
 
@@ -38,7 +38,7 @@ class GroceryScannerSpec extends Specification{
 
     def "removeLastScannedItem removes the last item the user rang up and subtracts the total from the sum"() {
         given:
-        GroceryItem pear = new GroceryItem("pear", 299, 0, 5)
+        GroceryItem pear = new GroceryItem("pear", 299, 0)
         groceryScanner.inventory.itemsInInventory = [apple, pear]
         groceryScanner.itemsRangUp = [apple.name, pear.name]
         groceryScanner.sum = apple.price + pear.price
@@ -53,7 +53,7 @@ class GroceryScannerSpec extends Specification{
 
     def "removeItem removes a specific item the user rang up based on its string ID" () {
         given:
-        GroceryItem pear = new GroceryItem("pear", 299, 0, 5)
+        GroceryItem pear = new GroceryItem("pear", 299, 0)
         groceryScanner.inventory.itemsInInventory = [apple, pear]
         groceryScanner.itemsRangUp = [apple.name, pear.name, pear.name]
         groceryScanner.sum = apple.price + pear.price + pear.price

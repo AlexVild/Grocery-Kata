@@ -4,12 +4,18 @@ class GroceryItem {
     String name
     int price
     int markdownPrice
-    float weight
+    boolean pricedByWeight = false
 
-    GroceryItem(String name, int price, int markdownPrice, float weight) {
+    GroceryItem(String name, int price, int markdownPrice, boolean pricedByWeight) {
         this.name = name
         this.price = price
         this.markdownPrice = markdownPrice
-        this.weight = weight
+        this.pricedByWeight = pricedByWeight
+    }
+
+    GroceryItem(String name, int price, int markdownPrice) {
+        this.name = name
+        this.price = price
+        this.markdownPrice = markdownPrice
     }
 }
