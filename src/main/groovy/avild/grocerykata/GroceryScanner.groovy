@@ -10,9 +10,9 @@ class GroceryScanner {
         itemsRangUp = []
     }
 
-    void ringItem(String itemName, float weight = 1.0) {
+    void ringItem(String itemName, float weight = 1.0, Integer markdownPrice = null) {
         GroceryItem queriedItem = this.inventory.queryForItem(itemName)
-        int priceOfItem = queriedItem.price
+        int priceOfItem = markdownPrice ? markdownPrice : queriedItem.price
 
         this.itemsRangUp.push(itemName)
         this.sum += (priceOfItem.toFloat() * weight).toInteger()

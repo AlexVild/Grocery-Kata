@@ -68,6 +68,14 @@ class GroceryScannerSpec extends Specification{
         groceryScanner.itemsRangUp[0] == "apple"
     }
 
+    def "ringItem uses a markdown price when available" () {
+        when:
+        groceryScanner.ringItem("apple", 0.5, 199)
+
+        then:
+        groceryScanner.sum == 99
+    }
+
     def "removeLastScannedItem removes the last item the user rang up and subtracts the total from the sum"() {
         given:
         GroceryItem pear = new GroceryItem("pear", 299, 0)
