@@ -13,4 +13,15 @@ class GroceryItemSpec extends Specification {
         item.markdownPrice == 0
         item.pricedByWeight
     }
+
+    def "constructor for Grocery Item correctly creates a new Grocery Item with default weight value"() {
+        when:
+        GroceryItem item = new GroceryItem("apple", 299, 0)
+
+        then:
+        item.name == "apple"
+        item.price == 299
+        item.markdownPrice == 0
+        !item.pricedByWeight
+    }
 }
