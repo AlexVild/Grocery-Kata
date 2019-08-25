@@ -144,4 +144,24 @@ class GroceryScannerSpec extends Specification{
         then:
         groceryScanner.runningTotal() == 598
     }
+
+    def "calcAmountSavedFromSpecials will use special limits correctly"() {
+        given:
+        GroceryItem pear = new GroceryItem(name: "pear", price: 299)
+        groceryScanner.inventory.itemsInInventory = [pear]
+        groceryScanner.inventory.currentSpecials = [
+                new AmountSpecial(itemName: "pear", triggerAmount: 2, newPrice: 299, limit: 4)
+        ]
+
+        when:
+        groceryScanner.ringItem("pear")
+        groceryScanner.ringItem("pear")
+        groceryScanner.ringItem("pear")
+        groceryScanner.ringItem("pear")
+        groceryScanner.ringItem("pear")
+        groceryScanner.ringItem("pear")
+
+        then:
+        groceryScanner.runningTotal() == 1196
+    }
 }
