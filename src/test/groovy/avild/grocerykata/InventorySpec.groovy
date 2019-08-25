@@ -1,6 +1,7 @@
 package avild.grocerykata
 
 import avild.grocerykata.specials.AmountSpecial
+import avild.grocerykata.specials.EqualOrLesserSpecial
 import avild.grocerykata.specials.PercentageSpecial
 import spock.lang.Specification
 
@@ -158,5 +159,42 @@ class InventorySpec extends Specification {
         then:
         def ex = thrown(RuntimeException)
         ex.message == "water does not exist in the inventory"
+    }
+
+    def "addEqualOrLesserSpecial adds a special for the given item"() {
+        given:
+        EqualOrLesserSpecial expectedSpecial = new EqualOrLesserSpecial(itemName: "meat", triggerWeight: 2.0, percentOff: 0.5)
+        GroceryItem meat = new GroceryItem(name: "meat", price: 3, pricedByWeight: true)
+        mockInventory.itemsInInventory = [meat]
+
+        when:
+        mockInventory.addEqualOrLesserSpecial("meat", 2.0, 0.5, 0)
+
+        then:
+        mockInventory.currentSpecials.size() == 1
+        mockInventory.currentSpecials[0].itemName == expectedSpecial.itemName
+        mockInventory.currentSpecials[0].triggerWeight == expectedSpecial.triggerWeight
+        mockInventory.currentSpecials[0].percentOff == expectedSpecial.percentOff
+        mockInventory.currentSpecials[0].limit == expectedSpecial.limit
+    }
+
+    def "addEqualOrLesserSpecial throws an exception if there is no item for which to add a special to"() {
+        when:
+        mockInventory.addEqualOrLesserSpecial("meat", 2.0, 0.3, 0)
+
+        then:
+        def ex = thrown(RuntimeException)
+        ex.message == "meat does not exist in the inventory"
+    }
+
+    def "addEqualOrLesserSpecial throws an exception if the item in question is not priced by weight"() {
+        when:
+        GroceryItem chip = new GroceryItem(name: "chip", price: 100)
+        mockInventory.itemsInInventory = [chip]
+        mockInventory.addEqualOrLesserSpecial("chip", 2.0, 0.3, 0)
+
+        then:
+        def ex = thrown(RuntimeException)
+        ex.message == "Item 'chip' is not priced by weight"
     }
 }

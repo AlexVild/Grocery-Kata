@@ -1,7 +1,6 @@
 package avild.grocerykata
 
 import avild.grocerykata.specials.AmountSpecial
-import avild.grocerykata.specials.AmountSpecialSpec
 import avild.grocerykata.specials.PercentageSpecial
 import spock.lang.Specification
 

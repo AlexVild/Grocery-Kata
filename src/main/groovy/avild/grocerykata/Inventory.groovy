@@ -1,6 +1,7 @@
 package avild.grocerykata
 
 import avild.grocerykata.specials.AmountSpecial
+import avild.grocerykata.specials.EqualOrLesserSpecial
 import avild.grocerykata.specials.PercentageSpecial
 import avild.grocerykata.specials.Special
 
@@ -54,6 +55,17 @@ class Inventory {
         if (queryForItem(itemName)) { // ensure the item exists in the inventory
             PercentageSpecial newSpecial = new PercentageSpecial(itemName: itemName, specialAmount: specialAmount, percentOff: percentOff, limit: limit)
             currentSpecials << newSpecial
+        }
+    }
+
+    void addEqualOrLesserSpecial(String itemName, float triggerWeight, float percentOff, int limit) {
+        if (queryForItem(itemName)) { // ensure the item exists in the inventory
+            if (queryForItem(itemName).pricedByWeight) { // ensure the item is a weighted item
+                EqualOrLesserSpecial newSpecial = new EqualOrLesserSpecial(itemName: itemName, triggerWeight: triggerWeight, percentOff: percentOff, limit: limit)
+                currentSpecials << newSpecial
+            } else {
+                throw new RuntimeException("Item '${itemName}' is not priced by weight")
+            }
         }
     }
 
