@@ -1,11 +1,15 @@
 package avild.grocerykata
 
+import avild.grocerykata.specials.Special
+
 // Class performs CRUD operations on our grocery Inventory
 class Inventory {
     public ArrayList<GroceryItem> itemsInInventory
+    public ArrayList<Special> currentSpecials
 
     Inventory() {
         itemsInInventory = new ArrayList<GroceryItem>()
+        currentSpecials = new ArrayList<Special>()
     }
 
     void addItem(GroceryItem item) throws RuntimeException {

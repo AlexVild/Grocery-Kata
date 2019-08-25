@@ -11,28 +11,28 @@ class GroceryScanner {
     }
 
     void ringItem(String itemName, float weight = 1.0, Integer markdownPrice = null) {
-        GroceryItem queriedItem = this.inventory.queryForItem(itemName)
+        GroceryItem queriedItem = inventory.queryForItem(itemName)
         int priceOfItem = markdownPrice ? markdownPrice : queriedItem.price
 
-        this.itemsRangUp.push(itemName)
-        this.sum += (priceOfItem.toFloat() * weight).toInteger()
+        itemsRangUp.push(itemName)
+        sum += (priceOfItem.toFloat() * weight).toInteger()
     }
 
     void removeLastScannedItem() {
-        String itemToRemove = this.itemsRangUp.head()
-        int priceOfItem = this.inventory.queryForItem(itemToRemove).price
+        String itemToRemove = itemsRangUp.head()
+        int priceOfItem = inventory.queryForItem(itemToRemove).price
 
-        this.itemsRangUp.pop() // remove the item from our rang up list
-        this.sum -= priceOfItem
+        itemsRangUp.pop() // remove the item from our rang up list
+        sum -= priceOfItem
     }
 
     void removeItem(String item) {
-        int priceOfItem = this.inventory.queryForItem(item).price
-        this.itemsRangUp.remove(this.itemsRangUp.indexOf(item))
-        this.sum -= priceOfItem
+        int priceOfItem = inventory.queryForItem(item).price
+        itemsRangUp.remove(itemsRangUp.indexOf(item))
+        sum -= priceOfItem
     }
 
     String getFormattedSum() {
-        return "\$${this.sum.toFloat() / 100}"
+        return "\$${sum / 100.0}"
     }
 }

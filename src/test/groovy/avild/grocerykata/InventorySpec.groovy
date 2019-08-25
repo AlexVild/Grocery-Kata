@@ -11,9 +11,10 @@ class InventorySpec extends Specification {
         mockInventory = new Inventory()
     }
 
-    def "Inventory() creates a clear inventory list"() {
+    def "Inventory() creates a clear inventory list and current special list"() {
         expect:
         mockInventory.itemsInInventory == []
+        mockInventory.currentSpecials == []
     }
 
     def "addItem adds a new grocery item to the store's inventory"() {
