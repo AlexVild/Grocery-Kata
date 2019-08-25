@@ -135,7 +135,7 @@ class GroceryScannerSpec extends Specification{
         GroceryItem chips = new GroceryItem(name: "chips", price: 4)
         groceryScanner.inventory.itemsInInventory = [pear, chips]
         groceryScanner.inventory.currentSpecials = [
-                new PercentageSpecial(itemName: "pear", triggerAmount: 1, specialAmount: 1, percentOff: 1.0),
+                new PercentageSpecial(itemName: "pear", triggerAmount: 2, specialAmount: 1, percentOff: 0.5),
         ]
 
         when:
@@ -144,7 +144,7 @@ class GroceryScannerSpec extends Specification{
         groceryScanner.ringItem("pear")
 
         then:
-        groceryScanner.runningTotal() == 598
+        groceryScanner.runningTotal() == 748
     }
 
     def "calcAmountSavedFromSpecials will use special limits correctly"() {
