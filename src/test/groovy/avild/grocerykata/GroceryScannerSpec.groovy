@@ -1,5 +1,7 @@
 package avild.grocerykata
 
+import avild.grocerykata.specials.AmountSpecial
+import avild.grocerykata.specials.AmountSpecialSpec
 import spock.lang.Specification
 
 class GroceryScannerSpec extends Specification{
@@ -116,5 +118,30 @@ class GroceryScannerSpec extends Specification{
 
         then:
         actualSumString == "\$3.98"
+    }
+
+    def "runningTotal returns a running total of the sum of item's cost"() {
+        when:
+        groceryScanner.ringItem(apple.name)
+
+        then:
+        groceryScanner.runningTotal() == 299
+    }
+
+    def "calcAmountSavedFromSpecials will evaluate current running specials and detract from the sum"() {
+        given:
+        GroceryItem pear = new GroceryItem(name: "pear", price: 299)
+        groceryScanner.inventory.itemsInInventory = [pear]
+        groceryScanner.inventory.currentSpecials = [
+                new AmountSpecial(itemName: "pear", triggerAmount: 2, newPrice: 299)
+        ]
+
+        when:
+        groceryScanner.ringItem("pear")
+        groceryScanner.ringItem("pear")
+        groceryScanner.ringItem("pear")
+
+        then:
+        groceryScanner.runningTotal() == 598
     }
 }

@@ -1,5 +1,8 @@
 package avild.grocerykata
 
+import avild.grocerykata.specials.AmountSpecial
+import avild.grocerykata.specials.Special
+
 // This class allows a clerk to ring up items for a customer who's checking out
 class GroceryScanner {
     Inventory inventory = new Inventory()
@@ -30,5 +33,44 @@ class GroceryScanner {
 
     String getFormattedSum() {
         return "\$${sum / 100.0}"
+    }
+
+    int runningTotal() {
+        return sum - calcAmountSavedFromSpecials()
+    }
+
+    private int calcAmountSavedFromSpecials() {
+        ArrayList<Special> currentSpecials = this.inventory.currentSpecials
+        int amountToDetractFromSum = 0
+        currentSpecials.each { Special special ->
+            switch (special) {
+                case AmountSpecial:
+                    amountToDetractFromSum += checkAmountSpecial(special as AmountSpecial)
+                    break
+                default:
+                    break
+            }
+        }
+
+        return amountToDetractFromSum
+    }
+
+    private int checkAmountSpecial(AmountSpecial special) {
+        int amountSaved = 0
+        if(itemsRangUp.contains(special.itemName)) {
+            def amountCheckedOut = itemsRangUp.count(special.itemName)
+            if (amountCheckedOut > special.triggerAmount) {
+                int timesSpecialCanBeUsed
+                if (special.limit != 0 && amountCheckedOut / special.triggerAmount > special.limit) {
+                    timesSpecialCanBeUsed = special.limit
+                } else {
+                    timesSpecialCanBeUsed = (amountCheckedOut / special.triggerAmount) as int
+                }
+                timesSpecialCanBeUsed.times {
+                    amountSaved += special.newPrice
+                }
+            }
+        }
+        return amountSaved
     }
 }
