@@ -48,6 +48,9 @@ class GroceryScanner {
                 case PercentageSpecial:
                     amountToDetractFromSum += checkPercentSpecial(special as PercentageSpecial)
                     break
+                case AmountSpecial:
+                    amountToDetractFromSum += checkAmountSpecial(special as AmountSpecial)
+                    break
                 default:
                     break
             }
@@ -60,7 +63,7 @@ class GroceryScanner {
         int amountSaved = 0
         if(itemsRangUp.contains(special.itemName)) {
             def amountCheckedOut = itemsRangUp.count(special.itemName)
-            if (amountCheckedOut > special.triggerAmount) {
+            if (amountCheckedOut >= special.triggerAmount) {
                 int regularPriceOfItem = inventory.queryForItem(special.itemName).price
                 boolean isLimitExceeded = (special.limit != 0 && amountCheckedOut > special.limit)
 
@@ -69,6 +72,26 @@ class GroceryScanner {
                 int itemsAtSalePrice = totalItemsAffected / (special.triggerAmount + special.specialAmount) as int
 
                 amountSaved = itemsAtSalePrice * salePrice
+            }
+        }
+        return amountSaved
+    }
+
+    private int checkAmountSpecial(AmountSpecial special) {
+        int amountSaved = 0
+        if(itemsRangUp.contains(special.itemName)) {
+            def amountCheckedOut = itemsRangUp.count(special.itemName)
+            if (amountCheckedOut >= special.triggerAmount) {
+                int regularPriceOfItem = inventory.queryForItem(special.itemName).price
+                boolean isLimitExceeded = (special.limit != 0 && amountCheckedOut > special.limit)
+                def limit = isLimitExceeded ? special.limit : amountCheckedOut
+                def itemsWithinSpecial = limit / special.triggerAmount
+                def itemsNotWithinSpecial = isLimitExceeded ?
+                        amountCheckedOut - limit :
+                        limit % special.triggerAmount
+
+                def newTotalPrice = (regularPriceOfItem * itemsNotWithinSpecial) + (special.newPrice * itemsWithinSpecial)
+                amountSaved = (regularPriceOfItem * amountCheckedOut) - newTotalPrice
             }
         }
         return amountSaved

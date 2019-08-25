@@ -132,27 +132,33 @@ class GroceryScannerSpec extends Specification{
     def "calcAmountSavedFromSpecials will evaluate current running specials and detract from the sum"() {
         given:
         GroceryItem pear = new GroceryItem(name: "pear", price: 299)
-        GroceryItem chips = new GroceryItem(name: "chips", price: 4)
+        GroceryItem chips = new GroceryItem(name: "chips", price: 400)
         groceryScanner.inventory.itemsInInventory = [pear, chips]
         groceryScanner.inventory.currentSpecials = [
                 new PercentageSpecial(itemName: "pear", triggerAmount: 2, specialAmount: 1, percentOff: 0.5),
+                new AmountSpecial(itemName: "chips", triggerAmount: 3, newPrice: 500),
         ]
 
         when:
         groceryScanner.ringItem("pear")
         groceryScanner.ringItem("pear")
         groceryScanner.ringItem("pear")
+        groceryScanner.ringItem("chips")
+        groceryScanner.ringItem("chips")
+        groceryScanner.ringItem("chips")
 
         then:
-        groceryScanner.runningTotal() == 748
+        groceryScanner.runningTotal() == 1248
     }
 
     def "calcAmountSavedFromSpecials will use special limits correctly"() {
         given:
         GroceryItem pear = new GroceryItem(name: "pear", price: 299)
-        groceryScanner.inventory.itemsInInventory = [pear]
+        GroceryItem chips = new GroceryItem(name: "chips", price: 400)
+        groceryScanner.inventory.itemsInInventory = [pear, chips]
         groceryScanner.inventory.currentSpecials = [
-                new PercentageSpecial(itemName: "pear", triggerAmount: 1, specialAmount: 1, percentOff: 1.0,  limit: 4)
+                new PercentageSpecial(itemName: "pear", triggerAmount: 1, specialAmount: 1, percentOff: 1.0,  limit: 4),
+                new AmountSpecial(itemName: "chips", triggerAmount: 2, newPrice: 200, limit: 2)
         ]
 
         when:
@@ -162,8 +168,12 @@ class GroceryScannerSpec extends Specification{
         groceryScanner.ringItem("pear")
         groceryScanner.ringItem("pear")
         groceryScanner.ringItem("pear")
+        groceryScanner.ringItem("chips")
+        groceryScanner.ringItem("chips")
+        groceryScanner.ringItem("chips")
+        groceryScanner.ringItem("chips")
 
         then:
-        groceryScanner.runningTotal() == 1196
+        groceryScanner.runningTotal() == 2196
     }
 }

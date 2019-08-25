@@ -43,7 +43,7 @@ class Inventory {
         }
     }
 
-    void addAmountSpecial(String itemName, int triggerAmount, int newPrice, int limit) {
+    void addAmountSpecial(String itemName, int triggerAmount, int newPrice, int limit) { // todo one special per item
         if (queryForItem(itemName)) { // ensure the item exists in the inventory
             AmountSpecial newSpecial = new AmountSpecial(itemName: itemName, triggerAmount: triggerAmount, newPrice: newPrice, limit: limit)
             currentSpecials << newSpecial
