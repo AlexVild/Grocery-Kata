@@ -5,7 +5,7 @@ import spock.lang.Specification
 
 class InventorySpec extends Specification {
     Inventory mockInventory
-    GroceryItem apple = new GroceryItem("apple", 299, 0, true)
+    GroceryItem apple = new GroceryItem(name: "apple", price: 299, pricedByWeight: true)
 
     def setup() {
         mockInventory = new Inventory()
@@ -75,8 +75,8 @@ class InventorySpec extends Specification {
 
     def "clearInventory removes all items from the inventory"() {
         given:
-        GroceryItem banana = new GroceryItem("banana", 299, 0, true)
-        GroceryItem pear = new GroceryItem("pear", 299, 0)
+        GroceryItem banana = new GroceryItem(name: "banana", price: 299, pricedByWeight: true)
+        GroceryItem pear = new GroceryItem(name: "pear", price: 299)
         mockInventory.itemsInInventory = [apple, pear, banana]
 
         when:

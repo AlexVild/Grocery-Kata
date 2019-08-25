@@ -4,13 +4,8 @@ import avild.grocerykata.specials.Special
 
 // Class performs CRUD operations on our grocery Inventory
 class Inventory {
-    public ArrayList<GroceryItem> itemsInInventory
-    public ArrayList<Special> currentSpecials
-
-    Inventory() {
-        itemsInInventory = new ArrayList<GroceryItem>()
-        currentSpecials = new ArrayList<Special>()
-    }
+    ArrayList<GroceryItem> itemsInInventory = new ArrayList<GroceryItem>()
+    ArrayList<Special> currentSpecials = new ArrayList<Special>()
 
     void addItem(GroceryItem item) throws RuntimeException {
         // ensure the item is not already in the inventory

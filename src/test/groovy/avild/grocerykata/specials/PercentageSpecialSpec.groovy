@@ -3,9 +3,9 @@ package avild.grocerykata.specials
 import spock.lang.Specification
 
 class PercentageSpecialSpec extends Specification {
-    def "PercentageSpecial() constructor populates fields"() {
+    def "PercentageSpecial() constructor populates defaults"() {
         when:
-        PercentageSpecial special = new PercentageSpecial("chips", 1, 1.0, 0)
+        PercentageSpecial special = new PercentageSpecial(itemName: "chips", percentOff: 1, specialAmount: 1.0)
 
         then:
         special.itemName == "chips"
