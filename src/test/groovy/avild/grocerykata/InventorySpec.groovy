@@ -1,6 +1,6 @@
 package avild.grocerykata
 
-
+import avild.grocerykata.specials.AmountSpecial
 import spock.lang.Specification
 
 class InventorySpec extends Specification {
@@ -105,5 +105,31 @@ class InventorySpec extends Specification {
         then:
         def ex = thrown(RuntimeException)
         ex.message == "${query} does not exist in the inventory"
+    }
+
+    def "addAmountSpecial adds a special for the given item"() {
+        given:
+        AmountSpecial expectedSpecial = new AmountSpecial(itemName: "chips", triggerAmount: 2, newPrice: 3, limit: 0)
+        GroceryItem chips = new GroceryItem(name: "chips", price: 3)
+        mockInventory.itemsInInventory = [chips]
+
+        when:
+        mockInventory.addAmountSpecial("chips", 2, 3, 0)
+
+        then:
+        mockInventory.currentSpecials.size() == 1
+        mockInventory.currentSpecials[0].itemName == expectedSpecial.itemName
+        mockInventory.currentSpecials[0].triggerAmount == expectedSpecial.triggerAmount
+        mockInventory.currentSpecials[0].newPrice == expectedSpecial.newPrice
+        mockInventory.currentSpecials[0].limit == expectedSpecial.limit
+    }
+
+    def "addAmountSpecial throws an exception if there is no item for which to add a special to"() {
+        when:
+        mockInventory.addAmountSpecial("water", 2, 3, 0)
+
+        then:
+        def ex = thrown(RuntimeException)
+        ex.message == "water does not exist in the inventory"
     }
 }
