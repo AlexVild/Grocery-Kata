@@ -1,6 +1,7 @@
 package avild.grocerykata
 
 import avild.grocerykata.specials.AmountSpecial
+import avild.grocerykata.specials.PercentageSpecial
 import avild.grocerykata.specials.Special
 
 // Class performs CRUD operations on our grocery Inventory
@@ -45,6 +46,13 @@ class Inventory {
     void addAmountSpecial(String itemName, int triggerAmount, int newPrice, int limit) {
         if (queryForItem(itemName)) { // ensure the item exists in the inventory
             AmountSpecial newSpecial = new AmountSpecial(itemName: itemName, triggerAmount: triggerAmount, newPrice: newPrice, limit: limit)
+            currentSpecials << newSpecial
+        }
+    }
+
+    void addPercentageSpecial(String itemName, int specialAmount, float percentOff, int limit) {
+        if (queryForItem(itemName)) { // ensure the item exists in the inventory
+            PercentageSpecial newSpecial = new PercentageSpecial(itemName: itemName, specialAmount: specialAmount, percentOff: percentOff, limit: limit)
             currentSpecials << newSpecial
         }
     }
