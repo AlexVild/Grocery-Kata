@@ -60,12 +60,12 @@ class GroceryScanner {
         if(itemsRangUp.contains(special.itemName)) {
             def amountCheckedOut = itemsRangUp.count(special.itemName)
             if (amountCheckedOut > special.triggerAmount) {
-                int timesSpecialCanBeUsed
-                if (special.limit != 0 && amountCheckedOut > special.limit) {
-                    timesSpecialCanBeUsed = (special.limit / special.triggerAmount) as int
-                } else {
-                    timesSpecialCanBeUsed = (amountCheckedOut / special.triggerAmount) as int
-                }
+                boolean isLimitExceeded = (special.limit != 0 && amountCheckedOut > special.limit)
+
+                int timesSpecialCanBeUsed = isLimitExceeded ?
+                        (special.limit / special.triggerAmount) as int :
+                        (amountCheckedOut / special.triggerAmount) as int
+
                 amountSaved = special.newPrice * timesSpecialCanBeUsed
             }
         }
