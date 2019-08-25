@@ -10,6 +10,7 @@ class GroceryScanner {
     int sum = 0
     ArrayList<String> itemsRangUp = new ArrayList<String>() // stack - head of list should be last item rang up
 
+    // weight set by default to 1.0 so that calculation is fine with items not paid for by weight
     void ringItem(String itemName, float weight = 1.0, Integer markdownPrice = null) {
         GroceryItem queriedItem = inventory.queryForItem(itemName)
         int priceOfItem = markdownPrice ? markdownPrice : queriedItem.price
