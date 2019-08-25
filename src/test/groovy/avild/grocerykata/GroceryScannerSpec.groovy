@@ -2,6 +2,7 @@ package avild.grocerykata
 
 import avild.grocerykata.specials.AmountSpecial
 import avild.grocerykata.specials.AmountSpecialSpec
+import avild.grocerykata.specials.PercentageSpecial
 import spock.lang.Specification
 
 class GroceryScannerSpec extends Specification{
@@ -131,9 +132,10 @@ class GroceryScannerSpec extends Specification{
     def "calcAmountSavedFromSpecials will evaluate current running specials and detract from the sum"() {
         given:
         GroceryItem pear = new GroceryItem(name: "pear", price: 299)
-        groceryScanner.inventory.itemsInInventory = [pear]
+        GroceryItem chips = new GroceryItem(name: "chips", price: 4)
+        groceryScanner.inventory.itemsInInventory = [pear, chips]
         groceryScanner.inventory.currentSpecials = [
-                new AmountSpecial(itemName: "pear", triggerAmount: 2, newPrice: 299)
+                new PercentageSpecial(itemName: "pear", triggerAmount: 1, specialAmount: 1, percentOff: 1.0),
         ]
 
         when:
@@ -150,7 +152,7 @@ class GroceryScannerSpec extends Specification{
         GroceryItem pear = new GroceryItem(name: "pear", price: 299)
         groceryScanner.inventory.itemsInInventory = [pear]
         groceryScanner.inventory.currentSpecials = [
-                new AmountSpecial(itemName: "pear", triggerAmount: 2, newPrice: 299, limit: 4)
+                new PercentageSpecial(itemName: "pear", triggerAmount: 1, specialAmount: 1, percentOff: 1.0,  limit: 4)
         ]
 
         when:

@@ -1,6 +1,7 @@
 package avild.grocerykata
 
 import avild.grocerykata.specials.AmountSpecial
+import avild.grocerykata.specials.PercentageSpecial
 import avild.grocerykata.specials.Special
 
 // This class allows a clerk to ring up items for a customer who's checking out
@@ -44,8 +45,8 @@ class GroceryScanner {
         int amountToDetractFromSum = 0
         currentSpecials.each { Special special ->
             switch (special) {
-                case AmountSpecial:
-                    amountToDetractFromSum += checkAmountSpecial(special as AmountSpecial)
+                case PercentageSpecial:
+                    amountToDetractFromSum += checkPercentSpecial(special as PercentageSpecial)
                     break
                 default:
                     break
@@ -55,18 +56,19 @@ class GroceryScanner {
         return amountToDetractFromSum
     }
 
-    private int checkAmountSpecial(AmountSpecial special) {
+    private int checkPercentSpecial(PercentageSpecial special) {
         int amountSaved = 0
         if(itemsRangUp.contains(special.itemName)) {
             def amountCheckedOut = itemsRangUp.count(special.itemName)
             if (amountCheckedOut > special.triggerAmount) {
+                int regularPriceOfItem = inventory.queryForItem(special.itemName).price
                 boolean isLimitExceeded = (special.limit != 0 && amountCheckedOut > special.limit)
 
-                int timesSpecialCanBeUsed = isLimitExceeded ?
-                        (special.limit / special.triggerAmount) as int :
-                        (amountCheckedOut / special.triggerAmount) as int
+                def totalItemsAffected = isLimitExceeded ? special.limit : amountCheckedOut
+                int salePrice = regularPriceOfItem * special.percentOff as int
+                int itemsAtSalePrice = totalItemsAffected / (special.triggerAmount + special.specialAmount) as int
 
-                amountSaved = special.newPrice * timesSpecialCanBeUsed
+                amountSaved = itemsAtSalePrice * salePrice
             }
         }
         return amountSaved
