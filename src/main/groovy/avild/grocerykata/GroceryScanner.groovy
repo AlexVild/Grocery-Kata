@@ -79,7 +79,7 @@ class GroceryScanner {
     private int checkPercentSpecial(PercentageSpecial special) {
         int amountSaved = 0
         if(isItemRangUp(special.itemName)) {
-            def amountCheckedOut = itemsRangUp.count(special.itemName)
+            def amountCheckedOut = countTimesItemRangUp(special.itemName)
             if (amountCheckedOut >= special.triggerAmount) {
                 int regularPriceOfItem = inventory.queryForItem(special.itemName).price
                 boolean isLimitExceeded = (special.limit != 0 && amountCheckedOut > special.limit)
@@ -97,7 +97,7 @@ class GroceryScanner {
     private int checkAmountSpecial(AmountSpecial special) {
         int amountSaved = 0
         if(isItemRangUp(special.itemName)) {
-            def amountCheckedOut = itemsRangUp.count(special.itemName)
+            def amountCheckedOut = countTimesItemRangUp(special.itemName)
             if (amountCheckedOut >= special.triggerAmount) {
                 int regularPriceOfItem = inventory.queryForItem(special.itemName).price
                 boolean isLimitExceeded = (special.limit != 0 && amountCheckedOut > special.limit)
