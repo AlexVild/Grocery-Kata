@@ -34,14 +34,15 @@ class GroceryScannerSpec extends Specification{
 
     def "ringItem adds the newly rang item to the amount of items rang up (pushing to the front of the stack)"() {
         given:
-        groceryScanner.itemsRangUp = ["pear"]
+        groceryScanner.itemsRangUp = [new CheckedOutItem(name: "pear", weight: 1.0)]
 
         when:
         groceryScanner.ringItem("apple")
 
         then:
         groceryScanner.itemsRangUp.size() == 2
-        groceryScanner.itemsRangUp[0] == "apple"
+        groceryScanner.itemsRangUp[0].name == "apple"
+        groceryScanner.itemsRangUp[0].weight == 1.0 as float
     }
 
     def "ringItem correctly trims and ignores case of a query string"() {
@@ -62,14 +63,15 @@ class GroceryScannerSpec extends Specification{
 
     def "ringItem adds the item to the list of items rang up (front of stack)" () {
         given:
-        groceryScanner.itemsRangUp = ["pear"]
+        groceryScanner.itemsRangUp = [new CheckedOutItem(name: "pear", weight: 1.0)]
 
         when:
         groceryScanner.ringItem("apple", 0.5)
 
         then:
         groceryScanner.itemsRangUp.size() == 2
-        groceryScanner.itemsRangUp[0] == "apple"
+        groceryScanner.itemsRangUp[0].name == "apple"
+        groceryScanner.itemsRangUp[0].weight == 0.5 as float
     }
 
     def "ringItem uses a markdown price when available" () {
@@ -84,7 +86,10 @@ class GroceryScannerSpec extends Specification{
         given:
         GroceryItem pear = new GroceryItem(name: "pear", price: 299)
         groceryScanner.inventory.itemsInInventory = [apple, pear]
-        groceryScanner.itemsRangUp = [apple.name, pear.name]
+        groceryScanner.itemsRangUp = [
+                new CheckedOutItem(name: "pear", weight: 1.0),
+                new CheckedOutItem(name: "apple", weight: 1.0),
+        ]
         groceryScanner.sum = apple.price + pear.price
 
         when:
@@ -99,7 +104,11 @@ class GroceryScannerSpec extends Specification{
         given:
         GroceryItem pear = new GroceryItem(name: "pear", price: 299)
         groceryScanner.inventory.itemsInInventory = [apple, pear]
-        groceryScanner.itemsRangUp = [apple.name, pear.name, pear.name]
+        groceryScanner.itemsRangUp = [
+                new CheckedOutItem(name: "apple", weight: 1.0),
+                new CheckedOutItem(name: "pear", weight: 1.0),
+                new CheckedOutItem(name: "pear", weight: 1.0)
+        ]
         groceryScanner.sum = apple.price + pear.price + pear.price
 
         when:
@@ -148,8 +157,8 @@ class GroceryScannerSpec extends Specification{
         groceryScanner.ringItem("chips")
         groceryScanner.ringItem("chips")
         groceryScanner.ringItem("chips")
-        groceryScanner.ringItem("meat", 2)
-        groceryScanner.ringItem("meat", 1)
+        groceryScanner.ringItem("meat", 2.0)
+        groceryScanner.ringItem("meat", 1.0)
 
         then:
         groceryScanner.runningTotal() == 1498
@@ -179,5 +188,21 @@ class GroceryScannerSpec extends Specification{
 
         then:
         groceryScanner.runningTotal() == 2196
+    }
+
+    def "isItemRangUp returns true when item has been rang up" () {
+        when:
+        groceryScanner.ringItem("apple")
+
+        then:
+        groceryScanner.isItemRangUp("apple")
+    }
+
+    def "countTimesItemRangUp returns how many times an item has been rang up" () {
+        when:
+        groceryScanner.ringItem("apple")
+
+        then:
+        groceryScanner.countTimesItemRangUp("apple") == 1
     }
 }

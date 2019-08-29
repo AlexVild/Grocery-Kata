@@ -9,19 +9,30 @@ import avild.grocerykata.specials.Special
 class GroceryScanner {
     Inventory inventory = new Inventory()
     int sum = 0
-    ArrayList<String> itemsRangUp = new ArrayList<String>() // stack - head of list should be last item rang up
+    ArrayList<CheckedOutItem> itemsRangUp = new ArrayList<CheckedOutItem>() // stack - head of list should be last item rang up
+
+    boolean isItemRangUp(String itemName) {
+        return itemsRangUp.find { it.name == itemName }
+    }
+
+    int countTimesItemRangUp(String itemName) {
+        return itemsRangUp.count {
+            it.name == itemName
+        }
+    }
 
     // weight set by default to 1.0 so that calculation is fine with items not paid for by weight
     void ringItem(String itemName, float weight = 1.0, Integer markdownPrice = null) {
         GroceryItem queriedItem = inventory.queryForItem(itemName)
         int priceOfItem = markdownPrice ? markdownPrice : queriedItem.price
 
-        itemsRangUp.push(itemName)
+        CheckedOutItem checkedOutItem = new CheckedOutItem(name: itemName, weight: weight)
+        itemsRangUp.push(checkedOutItem)
         sum += (priceOfItem.toFloat() * weight).toInteger()
     }
 
     void removeLastScannedItem() {
-        String itemToRemove = itemsRangUp.head()
+        String itemToRemove = itemsRangUp.head().name
         int priceOfItem = inventory.queryForItem(itemToRemove).price
 
         itemsRangUp.pop() // remove the item from our rang up list
@@ -30,7 +41,8 @@ class GroceryScanner {
 
     void removeItem(String item) {
         int priceOfItem = inventory.queryForItem(item).price
-        itemsRangUp.remove(itemsRangUp.indexOf(item))
+        int indexToRemove = itemsRangUp.findIndexOf { it.name == item }
+        itemsRangUp.removeAt(indexToRemove)
         sum -= priceOfItem
     }
 
@@ -66,7 +78,7 @@ class GroceryScanner {
 
     private int checkPercentSpecial(PercentageSpecial special) {
         int amountSaved = 0
-        if(itemsRangUp.contains(special.itemName)) {
+        if(isItemRangUp(special.itemName)) {
             def amountCheckedOut = itemsRangUp.count(special.itemName)
             if (amountCheckedOut >= special.triggerAmount) {
                 int regularPriceOfItem = inventory.queryForItem(special.itemName).price
@@ -84,7 +96,7 @@ class GroceryScanner {
 
     private int checkAmountSpecial(AmountSpecial special) {
         int amountSaved = 0
-        if(itemsRangUp.contains(special.itemName)) {
+        if(isItemRangUp(special.itemName)) {
             def amountCheckedOut = itemsRangUp.count(special.itemName)
             if (amountCheckedOut >= special.triggerAmount) {
                 int regularPriceOfItem = inventory.queryForItem(special.itemName).price
@@ -104,10 +116,24 @@ class GroceryScanner {
 
     private int checkEqualOrLesserSpecial(EqualOrLesserSpecial special) {
         int amountSaved = 0
-        if(itemsRangUp.contains(special.itemName)) {
+        if(isItemRangUp(special.itemName)) {
+            GroceryItem item = inventory.queryForItem(special.itemName)
+
             float totalWeightCheckedOut = itemsRangUp
-                .findAll { it.equalsIgnoreCase(special.itemName) }
-                //.collect { it.weight } TODO need to add weights to checked out items
+                .findAll { it.name.equalsIgnoreCase(special.itemName) }
+                .inject(0.0) { result, it -> result + it.weight } as float
+            float currentWeight = totalWeightCheckedOut // this will be used as a decrementing value to determine when the special has been used up
+
+            while (currentWeight >= special.triggerWeight) {
+                currentWeight -= special.triggerWeight
+                if(currentWeight >= special.triggerWeight) {
+                    amountSaved = item.price * special.triggerWeight * special.percentOff as int
+                    currentWeight -= special.triggerWeight
+                } else {
+                    amountSaved = item.price * currentWeight * special.percentOff as int
+                    currentWeight -= special.triggerWeight
+                }
+            }
         }
         return amountSaved
     }
