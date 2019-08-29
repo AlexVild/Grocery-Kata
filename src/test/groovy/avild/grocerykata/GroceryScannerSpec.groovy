@@ -168,10 +168,12 @@ class GroceryScannerSpec extends Specification{
         given:
         GroceryItem pear = new GroceryItem(name: "pear", price: 299)
         GroceryItem chips = new GroceryItem(name: "chips", price: 400)
-        groceryScanner.inventory.itemsInInventory = [pear, chips]
+        GroceryItem meat = new GroceryItem(name: "meat", price: 100, pricedByWeight: true)
+        groceryScanner.inventory.itemsInInventory = [pear, chips, meat]
         groceryScanner.inventory.currentSpecials = [
                 new PercentageSpecial(itemName: "pear", triggerAmount: 1, specialAmount: 1, percentOff: 1.0,  limit: 4),
-                new AmountSpecial(itemName: "chips", triggerAmount: 2, newPrice: 200, limit: 2)
+                new AmountSpecial(itemName: "chips", triggerAmount: 2, newPrice: 200, limit: 2),
+                new EqualOrLesserSpecial(itemName: "meat", triggerWeight: 2.0, percentOff: 0.5, limit: 1),
         ]
 
         when:
@@ -185,9 +187,10 @@ class GroceryScannerSpec extends Specification{
         groceryScanner.ringItem("chips")
         groceryScanner.ringItem("chips")
         groceryScanner.ringItem("chips")
+        groceryScanner.ringItem("meat", 6.0)
 
         then:
-        groceryScanner.runningTotal() == 2196
+        groceryScanner.runningTotal() == 2796
     }
 
     def "isItemRangUp returns true when item has been rang up" () {
