@@ -122,8 +122,10 @@ class GroceryScanner {
             float totalWeightCheckedOut = itemsRangUp
                 .findAll { it.name.equalsIgnoreCase(special.itemName) }
                 .inject(0.0) { result, it -> result + it.weight } as float
+
             float currentWeight = totalWeightCheckedOut // this will be used as a decrementing value to determine when the special has been used up
             int timesSpecialUsed = 0
+
             while (currentWeight >= special.triggerWeight && timesSpecialUsed <= special.limit) {
                 currentWeight -= special.triggerWeight
                 timesSpecialUsed++
