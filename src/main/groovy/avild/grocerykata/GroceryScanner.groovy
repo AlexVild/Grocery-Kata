@@ -1,6 +1,7 @@
 package avild.grocerykata
 
 import avild.grocerykata.specials.AmountSpecial
+import avild.grocerykata.specials.EqualOrLesserSpecial
 import avild.grocerykata.specials.PercentageSpecial
 import avild.grocerykata.specials.Special
 
@@ -52,6 +53,9 @@ class GroceryScanner {
                 case AmountSpecial:
                     amountToDetractFromSum += checkAmountSpecial(special as AmountSpecial)
                     break
+                case EqualOrLesserSpecial:
+                    amountToDetractFromSum += checkEqualOrLesserSpecial(special as EqualOrLesserSpecial)
+                    break
                 default:
                     break
             }
@@ -94,6 +98,16 @@ class GroceryScanner {
                 def newTotalPrice = (regularPriceOfItem * itemsNotWithinSpecial) + (special.newPrice * itemsWithinSpecial)
                 amountSaved = (regularPriceOfItem * amountCheckedOut) - newTotalPrice
             }
+        }
+        return amountSaved
+    }
+
+    private int checkEqualOrLesserSpecial(EqualOrLesserSpecial special) {
+        int amountSaved = 0
+        if(itemsRangUp.contains(special.itemName)) {
+            float totalWeightCheckedOut = itemsRangUp
+                .findAll { it.equalsIgnoreCase(special.itemName) }
+                //.collect { it.weight } TODO need to add weights to checked out items
         }
         return amountSaved
     }

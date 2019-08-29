@@ -1,6 +1,7 @@
 package avild.grocerykata
 
 import avild.grocerykata.specials.AmountSpecial
+import avild.grocerykata.specials.EqualOrLesserSpecial
 import avild.grocerykata.specials.PercentageSpecial
 import spock.lang.Specification
 
@@ -132,10 +133,12 @@ class GroceryScannerSpec extends Specification{
         given:
         GroceryItem pear = new GroceryItem(name: "pear", price: 299)
         GroceryItem chips = new GroceryItem(name: "chips", price: 400)
-        groceryScanner.inventory.itemsInInventory = [pear, chips]
+        GroceryItem meat = new GroceryItem(name: "meat", price: 100, pricedByWeight: true)
+        groceryScanner.inventory.itemsInInventory = [pear, chips, meat]
         groceryScanner.inventory.currentSpecials = [
                 new PercentageSpecial(itemName: "pear", triggerAmount: 2, specialAmount: 1, percentOff: 0.5),
                 new AmountSpecial(itemName: "chips", triggerAmount: 3, newPrice: 500),
+                new EqualOrLesserSpecial(itemName: "meat", triggerWeight: 2.0, percentOff: 0.5),
         ]
 
         when:
@@ -145,9 +148,11 @@ class GroceryScannerSpec extends Specification{
         groceryScanner.ringItem("chips")
         groceryScanner.ringItem("chips")
         groceryScanner.ringItem("chips")
+        groceryScanner.ringItem("meat", 2)
+        groceryScanner.ringItem("meat", 1)
 
         then:
-        groceryScanner.runningTotal() == 1248
+        groceryScanner.runningTotal() == 1498
     }
 
     def "calcAmountSavedFromSpecials will use special limits correctly"() {
