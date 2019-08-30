@@ -164,6 +164,23 @@ class GroceryScannerSpec extends Specification{
         groceryScanner.runningTotal() == 1498
     }
 
+    def "removing an item with a special attached to it invalidates the special if it no longer holds"() {
+        given:
+        GroceryItem chips = new GroceryItem(name: "chips", price: 400)
+        groceryScanner.inventory.itemsInInventory = [chips]
+        groceryScanner.inventory.currentSpecials = [
+                new AmountSpecial(itemName: "chips", triggerAmount: 3, newPrice: 500),
+        ]
+
+        when:
+        groceryScanner.ringItem("chips")
+        groceryScanner.ringItem("chips")
+        groceryScanner.ringItem("chips")
+        groceryScanner.removeLastScannedItem()
+        then:
+        groceryScanner.runningTotal() == 800
+    }
+
     def "calcAmountSavedFromSpecials will use special limits correctly"() {
         given:
         GroceryItem pear = new GroceryItem(name: "pear", price: 299)
